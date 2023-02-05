@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: Newlimran;
+  src: local('Newlimran'), url(fonts/Newlimran-Yz12O.otf) format("opentype");
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
+html{
+  font-family:Newlimran;
+  font-family: Newlimran, Arial, serif;
+
+}

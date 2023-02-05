@@ -1,16 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-export const CrearNota = ({show,handleClose,handleCreate,setNota,nota}) => {
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
+export const CrearNota = ({show,handleClose,handleCreate,setNota,nota}) => {
+  const [value, setValue] = useState('');
     const handleChange = (e) => {
         setNota({
             ...nota,
             [e.target.name] : e.target.value
         })
     }
+    
   return (
     <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -31,7 +35,7 @@ export const CrearNota = ({show,handleClose,handleCreate,setNota,nota}) => {
 
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Nota</Form.Label>
-                    <Form.Control as="textarea" name="nota" value={nota.nota} onChange={handleChange} placeholder="Nota..." />
+                    <ReactQuill theme="snow" preserveWhitespace={true} name="nota" value={nota.nota} placeholder="Nota..."  onChange={(e)=>setNota({...nota,nota:e}) } />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                     <Form.Check type="checkbox" name="withpassword" checked={nota.withpassword} onChange={handleChange} label="Usar contraseña" />

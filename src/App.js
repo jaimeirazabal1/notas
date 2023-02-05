@@ -10,25 +10,21 @@ import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 
-
+import { getLocalNotes } from './utils/getLocalNotes'; 
+import { saveNotesOnMemory } from './utils/saveNotesOnMemory';
+import NotaModel from './models/Nota';
 
 function App() {
-  const [notas, setNotas] = useState([]);
-  const [nota, setNota] = useState({
-    id:"",
-    titulo:"",
-    descripcion:"",
-    nota:"",
-    withpassword:false,
-    password:"",
-    fecha:null,
-    favorita:false
-  });
+ 
+  const [notas, setNotas] = useState(getLocalNotes());
+  const [nota, setNota] = useState(NotaModel);
 
   const [show, setShow] = useState(false);
   const [crear,setCrear] = useState(false);
+  const [favoritoState,setfavoritoState] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
   const handleCreate = (e) => {
     e.preventDefault();
     setNota({
@@ -37,30 +33,30 @@ function App() {
       fecha:(new Date())
     })
     setCrear(true);
-    
   } 
   const handleFavorite = (nota) =>{
-    let encontro = notas.filter( busquedaNota =>  busquedaNota.id === nota.id )
-    console.log('encontro',encontro)
+    let indice = notas.findIndex( busquedaNota =>  busquedaNota.id === nota.id )
+    if(indice != -1){
+      notas[indice].favorita = !notas[indice].favorita;
+      setNotas(notas);
+      setfavoritoState(true);
+      saveNotesOnMemory(notas);
+    }
   }
 
   useEffect(()=>{
-    // console.log('nota',nota)
-    if(crear){
-      setNotas([...notas,nota])
-      setNota({
-        id:"",
-        titulo:"",
-        descripcion:"",
-        nota:"",
-        withpassword:false,
-        password:"",
-        fecha:null,
-        favorita:false
-      });
-      setCrear(false);
+    // console.log('notas',notas)
+    if(favoritoState){
+      setfavoritoState(false);
     }
-  },[nota]);
+    if(crear){
+      setNotas([nota,...notas])
+      setNota(NotaModel);
+      setCrear(false);
+      // console.log('notas')
+    }
+    saveNotesOnMemory(notas);
+  },[nota,favoritoState,crear,notas.length]);
 
   return (
     <Container style={{marginTop:'1rem'}}>
@@ -84,11 +80,11 @@ function App() {
       </Row>
       <Row>
         {
-          notas && notas.length ? notas.map( nota => 
-            <Col key={nota.id}>
+          notas && notas.length ? notas.sort( (a,b)=> b.favorita - a.favorita).map( nota => 
+            <Col key={nota.id}  md={3} lg={3}>
               <Nota note={nota} handleFavorite={handleFavorite}/>
             </Col>
-            ) : null
+            ) : <div className="no_notes"><h1>No tienes notas, crea tu primera nota...</h1></div>
         }
       </Row>
     </Container>

@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee, faStar } from '@fortawesome/free-solid-svg-icons'
+import moment from 'moment';
 
 import React from 'react'
 import Card from 'react-bootstrap/Card';
@@ -23,14 +24,12 @@ export const Nota = ({note,handleFavorite}) => {
         <Card.Body>
         <Card.Title>{titulo}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{descripcion}</Card.Subtitle>
-        <Card.Text>
-            <p style={{fontSize:"10px"}}>{id}</p>
-            <Card className='p-2'>
-                <code>{nota}</code>
-            </Card>
-        </Card.Text>
-        <Card.Link style={{fontSize:"8px"}}>{fecha.toString()}</Card.Link>
-        <Card.Link onClick={()=>handleFavorite(note)}> <FontAwesomeIcon style={{color:favorita ? "yellow" : ""}} icon={faStar} /></Card.Link>
+       
+            <span style={{fontSize:"10px"}}>{id}</span>
+            <Card className='p-2' style={{maxHeight:"60px",textOverflow: 'ellipsis',overflow:'ellipsis'}} dangerouslySetInnerHTML={{__html: nota}}></Card>
+      
+        <Card.Link style={{fontSize:"8px"}}>{moment(fecha).fromNow()}</Card.Link>
+        <Card.Link className="favorite" title="Marcar como favorita" onClick={()=>handleFavorite(note)}> <FontAwesomeIcon style={{color:favorita ? "yellow" : ""}} icon={faStar} /></Card.Link>
         </Card.Body>
     </Card>
   )
