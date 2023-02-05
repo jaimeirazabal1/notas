@@ -117,12 +117,12 @@ function App() {
         {
           notasBusqueda && notasBusqueda.length && textoBuscar? 
           notasBusqueda.sort( (a,b)=> b.favorita - a.favorita).map( nota => 
-            <Col key={nota.id}  md={3} lg={3}>
+            <Col key={nota.id}  xs={12} md={6} lg={3}>
               <Nota note={nota} handleFavorite={handleFavorite} handleShowNote={handleShowNote} handleDelete={handleDelete}/>
             </Col>
             ) :
           notas && notas.length ? notas.sort( (a,b)=> b.favorita - a.favorita).map( nota => 
-            <Col key={nota.id}  md={3} lg={3}>
+            <Col key={nota.id} xs={12} md={6} lg={3}>
               <Nota note={nota} handleFavorite={handleFavorite} handleShowNote={handleShowNote} handleDelete={handleDelete}/>
             </Col>
             ) : <div className="no_notes"><h1>No tienes notas, crea tu primera nota...</h1></div>

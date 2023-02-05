@@ -20,7 +20,7 @@ export const Nota = ({note,handleFavorite,handleDelete,handleShowNote}) => {
 
   return (
     
-    <Card style={{ width: '18rem', boxShadow:"1px 10px 5px", minHeight:"211px", maxHeight:"211px", marginTop:'10px',borderColor:favorita ? "10px solid #FEDE00" : "intherit" }}>
+    <Card style={{ width: '100%', boxShadow:"1px 10px 5px", minHeight:"211px", maxHeight:"211px", marginTop:'10px',borderColor:favorita ? "10px solid #FEDE00" : "intherit" }}>
         <Card.Body>
         <div className="card-header bg-transparent border-bottom-0 text-right">
           <button data-dismiss="alert" data-target="#closeablecard" onClick={()=>handleDelete(note)} type="button" className="close btn delete_note" aria-label="Close">
