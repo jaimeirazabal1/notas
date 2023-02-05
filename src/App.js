@@ -16,6 +16,9 @@ import Swal from 'sweetalert2'
 
 import NotaModel from './models/Nota';
 
+import { AES, enc } from 'crypto-js';
+
+
 function App() {
  
   const [notas, setNotas] = useState(getLocalNotes());
@@ -31,6 +34,15 @@ function App() {
 
   const handleCreate = (e) => {
     e.preventDefault();
+    console.log('handle',nota)
+    if(nota.withpassword){
+      const cipherText = AES.encrypt(nota.nota, nota.password);
+      setNota({
+        ...nota,
+        nota:cipherText,
+      })
+      // console.log('cipherText',cipherText)
+    }
     setNota({
       ...nota,
       id:uuidv4(),
@@ -88,7 +100,6 @@ function App() {
       setNotas([nota,...notas])
       setNota(NotaModel);
       setCrear(false);
-      // console.log('notas')
     }
     saveNotesOnMemory(notas);
   },[nota,favoritoState,crear,notas.length]);
