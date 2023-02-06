@@ -5,12 +5,55 @@ import Modal from 'react-bootstrap/Modal';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import hljs from 'highlight.js';
 
-
+hljs.configure({
+  // optionally configure hljs
+  languages: ["javascript", "python", "c", "c++", "java", "HTML", "css", "matlab"],
+});
 
 export const CrearNota = ({show,handleClose,handleCreate,setNota,nota}) => {
   const [checked, setChecked] = useState(false); 
-
+  const toolbarOptions = [
+    ["bold", "italic", "underline", "strike"],
+    ["blockquote", "code-block"],
+  
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link"],
+    [{ indent: "-1" }, { indent: "+1" }],
+  
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+  
+    [{ align: [] }],
+  ];
+  const modules = {
+    // syntax: {
+    //   highlight: function (text) {
+    //     return hljs.highlightAuto(text).value;
+    //   },
+    // },
+    toolbar: toolbarOptions,
+    clipboard: {
+      // toggle to add extra line breaks when pasting HTML:
+      matchVisual: false,
+    },
+  };
+    const formats = [
+      "header",
+      "font",
+      "size",
+      "bold",
+      "italic",
+      "underline",
+      "strike",
+      "blockquote",
+      "code-block",
+      "list",
+      "bullet",
+      "indent",
+      "link",
+      "align",
+    ];
     const handleChange = (e) => {
         
         setNota({
@@ -47,7 +90,7 @@ export const CrearNota = ({show,handleClose,handleCreate,setNota,nota}) => {
 
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Nota</Form.Label>
-                    <ReactQuill theme="snow" preserveWhitespace={true} name="notadescripcion" value={nota.notadescripcion} placeholder="Nota..."  onChange={(e)=>setNota({...nota,notadescripcion:e}) } />
+                    <ReactQuill theme="snow" modules={modules} formats={formats} preserveWhitespace={true} name="notadescripcion" value={nota.notadescripcion} placeholder="Nota..."  onChange={(e)=>{console.log(e);setNota({...nota,notadescripcion:e}) }} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                     <Form.Check type="checkbox" name="withpassword" checked={checked}  value={checked} onChange={handleCheck} label="Usar contraseña" />

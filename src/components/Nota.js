@@ -31,7 +31,7 @@ export const Nota = ({note,handleFavorite,handleDelete,handleShowNote}) => {
           <Card.Link className="favorite favorite_note btn" title="Marcar como favorita" onClick={()=>handleFavorite(note)}> <FontAwesomeIcon style={{color:favorita ? "#FEDE00" : ""}} icon={faStar} /></Card.Link>
         </div>
         <Card.Title>{titulo}</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">{descripcion}</Card.Subtitle>
+        <Card.Subtitle title={descripcion} className="mb-2 text-muted">{descripcion}</Card.Subtitle>
             <span style={{fontSize:"10px"}}>{id}</span>
             <Card onClick={()=>handleShowNote(note)} className='p-2 note_div' style={{maxHeight:"60px",textOverflow: 'ellipsis',overflow:'hidden'}} dangerouslySetInnerHTML={{__html: withpassword ? "<center style='font-size:15px;'>Protegido con contraseña</center>" : notadescripcion}}></Card>
         <Card.Link className="note_date" style={{fontSize:"8px"}}>{moment(fecha).fromNow()}</Card.Link>

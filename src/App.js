@@ -123,7 +123,7 @@ function App() {
 
       Swal.fire({
         title: nota.titulo,
-        html:`<div style="text-align:justify">${nota.nota}</div>`,
+        html:`<div style="text-align:justify">${nota.notadescripcion}</div>`,
         showCloseButton: true,
         focusConfirm: false,
       })
@@ -143,7 +143,7 @@ function App() {
       
     }
     saveNotesOnMemory(notas);
-
+    console.log('notas',notas)
   },[favoritoState,crear,notas]);
 
   return (
