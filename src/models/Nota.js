@@ -1,9 +1,8 @@
-
 const Nota = {
     id:"",
     titulo:"",
     descripcion:"",
-    nota:"",
+    notadescripcion:"",
     withpassword:false,
     password:"",
     fecha:null,

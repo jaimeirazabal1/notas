@@ -9,9 +9,7 @@ import 'react-quill/dist/quill.snow.css';
 
 
 export const CrearNota = ({show,handleClose,handleCreate,setNota,nota}) => {
-  const [value, setValue] = useState('');
   const [checked, setChecked] = useState(false); 
-
 
     const handleChange = (e) => {
         
@@ -49,7 +47,7 @@ export const CrearNota = ({show,handleClose,handleCreate,setNota,nota}) => {
 
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Nota</Form.Label>
-                    <ReactQuill theme="snow" preserveWhitespace={true} name="nota" value={nota.nota} placeholder="Nota..."  onChange={(e)=>setNota({...nota,nota:e}) } />
+                    <ReactQuill theme="snow" preserveWhitespace={true} name="notadescripcion" value={nota.notadescripcion} placeholder="Nota..."  onChange={(e)=>setNota({...nota,notadescripcion:e}) } />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                     <Form.Check type="checkbox" name="withpassword" checked={checked}  value={checked} onChange={handleCheck} label="Usar contraseña" />

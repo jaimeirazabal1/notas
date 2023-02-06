@@ -117,3 +117,10 @@
 .note_div:active .card{
   box-shadow:0px 0px 0px !important;
 }
+
+.edit_note{
+  color:orange !important;
+  padding:0px;
+  /* text-align:right; */
+  float:right;
+}

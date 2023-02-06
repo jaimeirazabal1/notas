@@ -8,14 +8,14 @@ import { Nota } from './components/Nota';
 import { CrearNota } from './components/CrearNota';
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { getLocalNotes } from './utils/getLocalNotes'; 
 import { saveNotesOnMemory } from './utils/saveNotesOnMemory';
 import Swal from 'sweetalert2'
 
 import NotaModel from './models/Nota';
-
+// eslint-disable-next-line
 import { AES, enc } from 'crypto-js';
 
 
@@ -34,25 +34,37 @@ function App() {
 
   const handleCreate = (e) => {
     e.preventDefault();
-    console.log('handle',nota)
+    // console.log('handle',nota)
+    const cipherText = AES.encrypt(nota.notadescripcion, nota.password);
+    let newNota;
     if(nota.withpassword){
-      const cipherText = AES.encrypt(nota.nota, nota.password);
-      setNota({
+      newNota = {
         ...nota,
-        nota:cipherText,
-      })
+        notadescripcion:cipherText.toString(),
+        id:uuidv4(),
+        fecha:(new Date()),
+      }
+
+
       // console.log('cipherText',cipherText)
+    }else{
+
+      newNota = {
+        ...nota,
+        id:uuidv4(),
+        fecha:(new Date())
+      }
+      
+
     }
-    setNota({
-      ...nota,
-      id:uuidv4(),
-      fecha:(new Date())
-    })
+    
+    setNota(newNota);
     setCrear(true);
+    setNota(newNota);
   } 
   const handleFavorite = (nota) =>{
     let indice = notas.findIndex( busquedaNota =>  busquedaNota.id === nota.id )
-    if(indice != -1){
+    if(indice !== -1){
       notas[indice].favorita = !notas[indice].favorita;
       setNotas(notas);
       setfavoritoState(true);
@@ -81,31 +93,64 @@ function App() {
     return;
     
   }
-
   const handleShowNote = (nota) => {
-    Swal.fire({
-      title: nota.titulo,
-      html:`<div style="text-align:justify">${nota.nota}</div>`,
-      showCloseButton: true,
-      focusConfirm: false,
-    })
-  }
+    if(nota.withpassword){
+      Swal.fire({
+        title: 'Ingresa la contraseña',
+        input: 'password',
+        inputAttributes: {
+          autocapitalize: 'off'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        showLoaderOnConfirm: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+        
+          let bytes;
+          bytes = AES.decrypt(nota.notadescripcion.replace('<p>','').replace('</p>',''), result.value);
+          const decrypted = bytes.toString(enc.Utf8);
+          Swal.fire({
+            title: nota.titulo,
+            html:`<div style="text-align:justify">${decrypted}</div>`,
+            showCloseButton: true,
+            focusConfirm: false,
+          })
+        }
+      })
+      
+    }else{
 
+      Swal.fire({
+        title: nota.titulo,
+        html:`<div style="text-align:justify">${nota.nota}</div>`,
+        showCloseButton: true,
+        focusConfirm: false,
+      })
+    }
+  }
+  
   useEffect(()=>{
-    // console.log('notas',notas)
+  
     if(favoritoState){
       setfavoritoState(false);
     }
     if(crear){
+      
       setNotas([nota,...notas])
-      setNota(NotaModel);
       setCrear(false);
+      setNota(NotaModel);
+      
     }
     saveNotesOnMemory(notas);
-  },[nota,favoritoState,crear,notas.length]);
+
+  },[favoritoState,crear,notas]);
 
   return (
     <Container style={{marginTop:'1rem'}}>
+      <Row className="text-center">
+        <Col style={{fontSize:"10px"}}>Hecho por Jaime Irazabal - jaimeirazabal1@gmail.com - github:https://github.com/jaimeirazabal1/notas</Col>
+      </Row>
       <Row>
         <Col>
           <div className="d-grid gap-2">
@@ -128,12 +173,12 @@ function App() {
         {
           notasBusqueda && notasBusqueda.length && textoBuscar? 
           notasBusqueda.sort( (a,b)=> b.favorita - a.favorita).map( nota => 
-            <Col key={nota.id}  xs={12} md={6} lg={3}>
+            <Col key={uuidv4()}  xs={12} md={6} lg={3}>
               <Nota note={nota} handleFavorite={handleFavorite} handleShowNote={handleShowNote} handleDelete={handleDelete}/>
             </Col>
             ) :
           notas && notas.length ? notas.sort( (a,b)=> b.favorita - a.favorita).map( nota => 
-            <Col key={nota.id} xs={12} md={6} lg={3}>
+            <Col key={uuidv4()} xs={12} md={6} lg={3}>
               <Nota note={nota} handleFavorite={handleFavorite} handleShowNote={handleShowNote} handleDelete={handleDelete}/>
             </Col>
             ) : <div className="no_notes"><h1>No tienes notas, crea tu primera nota...</h1></div>
