@@ -5,7 +5,7 @@ import moment from 'moment';
 import React from 'react'
 import Card from 'react-bootstrap/Card';
 
-export const Nota = ({note,handleFavorite,handleDelete,handleShowNote}) => {
+export const Nota = ({note,handleFavorite,handleDelete,handleShowNote,handleEdit}) => {
     // console.log('note->',note)
     const {
         id,
@@ -25,7 +25,7 @@ export const Nota = ({note,handleFavorite,handleDelete,handleShowNote}) => {
           <button data-dismiss="alert" data-target="#closeablecard" onClick={()=>handleDelete(note)} type="button" className="close btn delete_note" aria-label="Close">
             <FontAwesomeIcon icon={faTrash} style={{color:"#D10000"}} />
           </button>
-          <button data-dismiss="alert" data-target="#closeablecard" onClick={()=>handleDelete(note)} type="button" className="close btn edit_note" aria-label="Close">
+          <button  onClick={()=>handleEdit(note)} type="button" className=" btn edit_note" >
             <FontAwesomeIcon icon={faPencil} style={{color:"orange"}} />
           </button>
           <Card.Link className="favorite favorite_note btn" title="Marcar como favorita" onClick={()=>handleFavorite(note)}> <FontAwesomeIcon style={{color:favorita ? "#FEDE00" : ""}} icon={faStar} /></Card.Link>

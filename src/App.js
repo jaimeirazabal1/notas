@@ -17,6 +17,7 @@ import Swal from 'sweetalert2'
 import NotaModel from './models/Nota';
 // eslint-disable-next-line
 import { AES, enc } from 'crypto-js';
+import { EditarNota } from './components/EditarNota';
 
 
 function App() {
@@ -27,9 +28,11 @@ function App() {
   const [textoBuscar, settextoBuscar] = useState('');
 
   const [show, setShow] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [crear,setCrear] = useState(false);
   const [favoritoState,setfavoritoState] = useState(false);
   const handleClose = () => setShow(false);
+  const handleCloseEdit = () => setShowEdit(false);
   const handleShow = () => setShow(true);
 
   const handleCreate = (e) => {
@@ -129,6 +132,60 @@ function App() {
       })
     }
   }
+
+  const handleEdit = (note) => {
+    let indice = notas.findIndex( busquedaNota =>  busquedaNota.id === note.id )
+    if(indice !== -1){
+      setNota(note)
+      setShowEdit(true);
+    }
+  }
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    // console.log('handle',nota)
+    let indice = notas.findIndex( busquedaNota =>  busquedaNota.id === nota.id )
+    // console.log('nuevasNotas',nuevasNotas)
+    const cipherText = AES.encrypt(nota.notadescripcion, nota.password);
+    notas[indice] = {
+      ...nota,
+      notadescripcion:cipherText.toString(),
+      id:uuidv4(),
+      fecha:(new Date()),
+    }
+    let newNota;
+    if(nota.withpassword){
+      notas[indice] = {
+       
+        notadescripcion:cipherText.toString(),
+        titulo:nota.titulo,
+        descripcion:nota.descripcion,
+        withpassword:nota.withpassword,
+        password:nota.password,
+        fecha:(new Date()),
+      }
+
+
+      // console.log('cipherText',cipherText)
+    }else{
+
+      notas[indice] = {
+   
+        notadescripcion:nota.notadescripcion,
+        titulo:nota.titulo,
+        descripcion:nota.descripcion,
+        withpassword:nota.withpassword,
+        password:nota.password,
+        fecha:(new Date()),
+      }
+      
+
+    }
+    
+    setNotas(notas);
+    setCrear(true);
+    setNota(newNota);
+  }
   
   useEffect(()=>{
   
@@ -143,11 +200,13 @@ function App() {
       
     }
     saveNotesOnMemory(notas);
-    console.log('notas',notas)
-  },[favoritoState,crear,notas]);
+    // console.log('notas',notas)
+    console.log('nota',nota)
+  },[favoritoState,crear,notas,nota]);
 
   return (
     <Container style={{marginTop:'1rem'}}>
+      <EditarNota show={showEdit} handleClose={handleCloseEdit} setNota={setNota} nota={nota} handleUpdate={handleUpdate}/>
       <Row className="text-center">
         <Col style={{fontSize:"10px"}}>Hecho por Jaime Irazabal - jaimeirazabal1@gmail.com - github:https://github.com/jaimeirazabal1/notas</Col>
       </Row>
@@ -174,12 +233,12 @@ function App() {
           notasBusqueda && notasBusqueda.length && textoBuscar? 
           notasBusqueda.sort( (a,b)=> b.favorita - a.favorita).map( nota => 
             <Col key={uuidv4()}  xs={12} md={6} lg={3}>
-              <Nota note={nota} handleFavorite={handleFavorite} handleShowNote={handleShowNote} handleDelete={handleDelete}/>
+              <Nota note={nota} handleFavorite={handleFavorite} handleEdit={handleEdit} handleShowNote={handleShowNote} handleDelete={handleDelete}/>
             </Col>
             ) :
           notas && notas.length ? notas.sort( (a,b)=> b.favorita - a.favorita).map( nota => 
             <Col key={uuidv4()} xs={12} md={6} lg={3}>
-              <Nota note={nota} handleFavorite={handleFavorite} handleShowNote={handleShowNote} handleDelete={handleDelete}/>
+              <Nota note={nota} handleFavorite={handleFavorite} handleEdit={handleEdit} handleShowNote={handleShowNote} handleDelete={handleDelete}/>
             </Col>
             ) : <div className="no_notes"><h1>No tienes notas, crea tu primera nota...</h1></div>
         }
